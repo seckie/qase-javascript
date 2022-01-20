@@ -3,7 +3,6 @@ import { MochaOptions, Runner, Test, reporters } from 'mocha';
 import { ResultCreate, ResultCreated, ResultStatus, RunCreate, RunCreated } from 'qaseio/dist/src/models';
 import { QaseApi } from 'qaseio';
 import chalk from 'chalk';
-import { sleep } from 'deasync';
 
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -122,7 +121,9 @@ class CypressQaseReporter extends reporters.Base {
                 const endTime = Date.now() + 30e3;
                 while ((this.shouldPublish !== 0) && (Date.now() < endTime)) {
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-                    sleep(500);
+                    const sab = new SharedArrayBuffer(8);
+                    const s32ar = new Int32Array(sab);
+                    Atomics.wait(s32ar, 0, 0, 500);
                 }
                 if (this.runId && this.shouldPublish !== 0) {
                     this.log(
